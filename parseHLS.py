@@ -70,7 +70,6 @@ def s_find(res_b):
     data = res_b[ts_end+1:]
     return ts,data
 if __name__ == "__main__":
-    test
     start = 0
     prv_ts = ""
     for i in xrange(1):
