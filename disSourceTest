@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+
+import httplib2
+import random
+import socket
+import sys
+import time
+import threading
+import json
+def requestStun(rets):  
+
+    url = "http://r1.dispatch.yunfancdn.com:8080/query/live/source_server?rtmp=rtmp://dlrtmp.cdn.zhanqi.tv/zqlive/"  
+    url = url+str(random.randint(10**7,10**8-1))
+    start = time.time()
+    headers={
+    "Connection": "close"
+    }
+
+    http=httplib2.Http(timeout = 5)
+    try:
+        res_h, res_b = http.request(url, "GET",headers=headers)
+    except socket.error,e:
+        print " socket.error:"+str(e)
+    except httplib2.ServerNotFoundError,e:
+        print " ServerNotFoundError:"+str(e)
+
+    if res_h.status == 200:
+        res_json = json.loads(res_b)
+        ip = res_json["ip"]
+        if ip  in ("120.26.104.44","121.40.225.238","121.43.119.164","218.244.150.154","121.40.229.157","121.40.150.59"):
+            print ip
+
+if __name__ == "__main__":
+
+    rets = {}
+    for x in xrange(2):
+        # thread.start_new_thread(requestStun,(rets,))
+        t = threading.Thread(target=requestStun,args=(rets,))
+        t.start()
+        t.join()
+
+    print rets
