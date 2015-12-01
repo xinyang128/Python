@@ -1,21 +1,24 @@
 #-*- coding: UTF-8 -*- 。
 import httplib2
 import time
+import datetime
 import re
 import socket
 def downfile(url):
-
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     start = time.time()
     http=httplib2.Http(timeout = 5)
     try:
         res_h, res_b = http.request(url, "GET")
     except socket.error,e:
-        print " socket.error:"+str(e)
+        print now," socket.error:"+str(e)
+        return []
     except httplib2.ServerNotFoundError,e:
-        print " ServerNotFoundError:"+str(e)
+        print now," ServerNotFoundError:"+str(e)
+        return []
     if res_h.status !=200 and res_h.status !=206  and res_h.status !=302:
         print url
-        print "ERROR: ",res_h
+        print now,"ERROR: ",res_h
         return []
 
     end = time.time()
@@ -24,12 +27,13 @@ def downfile(url):
     ex = url[url.rfind('/')+1:]
     content_location = res_h.get('content-location',"nokey")
     ip = content_location[7:content_location.find('/',7)]
-    print ex,"| IP:",ip,"| time:",down_time,"| file_len:",res_b_len,"| speed(KB/s):",int(int(res_b_len)/down_time/1000)
+    
+    print now,ex,"| IP:",ip,"| time:",down_time,"| file_len:",res_b_len,"| speed(KB/s):",int(int(res_b_len)/down_time/1000)
     #保存ts
-    filename = ex[:ex.find('?')]
-    fp = open(filename,'wb')
-    fp.write(res_b)
-    fp.close()
+    # filename = ex[:ex.find('?')]
+    # fp = open(filename,'wb')
+    # fp.write(res_b)
+    # fp.close()
     if '.m3u8' in ex:
         return parseM3U8(url,res_b)
     else:
@@ -74,9 +78,11 @@ if __name__ == "__main__":
     prv_ts = ""
     for i in xrange(1):
         #先下载m3u8文件
-        tss = downfile('http://dianbo.hls.yunfancdn.com/video/hls/mp4/jiucenyaota/playlist.m3u8')
+        tss = downfile('http://z.cdn.3gtv.net/cdn/gdws-h.stream/online.m3u8')
         if tss ==[]:
-            break
+            time.sleep(10)
+            continue
+            # break
         if prv_ts == "":
             start  = 0
         else:
