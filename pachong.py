@@ -76,6 +76,7 @@ if __name__ == "__main__":
     for u in  passUrls:
 
         try:
+            http=httplib2.Http(timeout = 2)
             res_h, res_b = http.request(u, "GET")
             if ("/card.mp4" in res_b) :
                 flag = 'property="og:videosrc"'
@@ -86,5 +87,7 @@ if __name__ == "__main__":
             print " socket.error:"+str(e)
         except httplib2.ServerNotFoundError,e:
             print " ServerNotFoundError:"+str(e)
+        except Exception,e:
+            print e
 
 
