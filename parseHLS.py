@@ -76,9 +76,9 @@ def s_find(res_b):
 if __name__ == "__main__":
     start = 0
     prv_ts = ""
-    for i in xrange(1):
+    for i in xrange(11):
         #先下载m3u8文件
-        tss = downfile('http://z.cdn.3gtv.net/cdn/gdws-h.stream/online.m3u8')
+        tss = downfile('http://cat302.hlslive.zhanqi.yfcdn.net/zqlive/37047_KWOM9/online.m3u8')
         if tss ==[]:
             time.sleep(10)
             continue
